@@ -10,10 +10,8 @@ insert into public.places (
   address,
   latitude,
   longitude,
-  visit_date,
   visit_year,
-  image_url,
-  source_url
+  image_url
 )
 values
   (
@@ -26,10 +24,8 @@ values
     '95 Haneulgongwon-ro, Mapo-gu',
     37.5663,
     126.8858,
-    '2025-10-12',
     2025,
-    'https://images.example.com/haneul-park.jpg',
-    'https://example.com/star-trails/haneul-park'
+    'https://images.example.com/haneul-park.jpg'
   ),
   (
     'Lina Stores',
@@ -41,10 +37,8 @@ values
     '18 Greek Street, Soho',
     51.5139,
     -0.1314,
-    '2025-06-04',
     2025,
-    'https://images.example.com/lina-stores.jpg',
-    'https://example.com/star-trails/lina-stores'
+    'https://images.example.com/lina-stores.jpg'
   ),
   (
     'The Grounds of Alexandria',
@@ -56,10 +50,8 @@ values
     '41-43a Harris Street, Alexandria',
     -33.9102,
     151.1949,
-    '2024-12-18',
     2024,
-    'https://images.example.com/grounds-alexandria.jpg',
-    'https://example.com/star-trails/grounds-alexandria'
+    'https://images.example.com/grounds-alexandria.jpg'
   ),
   (
     'Myeongdong Market',
@@ -71,10 +63,8 @@ values
     'Myeongdong-gil, Jung-gu',
     37.5636,
     126.9869,
-    '2024-05-20',
     2024,
-    'https://images.example.com/myeongdong-market.jpg',
-    'https://example.com/star-trails/myeongdong-market'
+    'https://images.example.com/myeongdong-market.jpg'
   ),
   (
     'Palais de Tokyo',
@@ -86,10 +76,8 @@ values
     '13 Avenue du President Wilson',
     48.8649,
     2.2977,
-    '2023-09-07',
     2023,
-    'https://images.example.com/palais-de-tokyo.jpg',
-    'https://example.com/star-trails/palais-de-tokyo'
+    'https://images.example.com/palais-de-tokyo.jpg'
   ),
   (
     'Dover Street Market',
@@ -101,8 +89,6 @@ values
     '160 Lexington Avenue, Manhattan',
     40.7448,
     -73.9811,
-    '2023-08-08',
     2023,
-    'https://images.example.com/dover-street-market.jpg',
-    'https://example.com/star-trails/dover-street-market'
+    'https://images.example.com/dover-street-market.jpg'
   );

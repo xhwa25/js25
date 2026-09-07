@@ -21,10 +21,9 @@ export interface Place {
   address: string | null
   latitude: number
   longitude: number
-  visit_date: string
   visit_year: number
   image_url: string | null
-  source_url: string | null
+  source_url?: string | null
   created_at: string
   updated_at: string
 }

@@ -18,10 +18,8 @@ create table if not exists public.places (
   address text,
   latitude double precision not null check (latitude between -90 and 90),
   longitude double precision not null check (longitude between -180 and 180),
-  visit_date date not null,
   visit_year integer not null check (visit_year between 1900 and 2200),
   image_url text,
-  source_url text,
   created_at timestamptz not null default timezone('utc', now()),
   updated_at timestamptz not null default timezone('utc', now())
 );
