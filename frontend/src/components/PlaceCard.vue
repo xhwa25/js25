@@ -3,12 +3,14 @@ import { ref } from 'vue'
 
 import FavoriteButton from './FavoriteButton.vue'
 import type { Place } from '../types/place'
+import { useLanguageStore } from '../stores/language'
 
 defineProps<{
   place: Place
 }>()
 
 const imageFailed = ref(false)
+const languageStore = useLanguageStore()
 </script>
 
 <template>
@@ -16,7 +18,7 @@ const imageFailed = ref(false)
     <RouterLink
       class="place-card-link"
       :to="{ name: 'place-detail', params: { id: place.id } }"
-      :aria-label="`View details for ${place.name}`"
+      :aria-label="`${languageStore.t('viewDetails')}: ${place.name}`"
     >
       <div class="place-card-media">
         <img
@@ -26,8 +28,8 @@ const imageFailed = ref(false)
           class="place-card-image"
           @error="imageFailed = true"
         />
-        <div v-else class="place-card-placeholder" aria-label="Place image unavailable">
-          No image
+        <div v-else class="place-card-placeholder" :aria-label="languageStore.t('noImage')">
+          {{ languageStore.t('noImage') }}
         </div>
       </div>
 
@@ -36,7 +38,7 @@ const imageFailed = ref(false)
           <h2 class="place-card-name">{{ place.name }}</h2>
         </div>
         <p class="place-card-location">{{ place.city }}, {{ place.country }}</p>
-        <p class="place-card-year">Visited {{ place.visit_year }}</p>
+        <p class="place-card-year">{{ languageStore.t('visited') }} {{ place.visit_year }}</p>
         <span class="place-card-category">{{ place.category }}</span>
       </div>
     </RouterLink>

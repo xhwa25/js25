@@ -4,9 +4,11 @@ import { computed, onMounted, ref } from 'vue'
 import PlaceList from '../components/PlaceList.vue'
 import { getPlaces } from '../services/places'
 import { useFavoritesStore } from '../stores/favorites'
+import { useLanguageStore } from '../stores/language'
 import type { Place } from '../types/place'
 
 const favoritesStore = useFavoritesStore()
+const languageStore = useLanguageStore()
 const allPlaces = ref<Place[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -19,7 +21,7 @@ onMounted(async () => {
   try {
     allPlaces.value = await getPlaces()
   } catch {
-    error.value = 'Unable to load saved places.'
+    error.value = languageStore.t('unableLoadSaved')
   } finally {
     loading.value = false
   }
@@ -28,15 +30,15 @@ onMounted(async () => {
 
 <template>
   <section class="saved-view" aria-labelledby="saved-title">
-    <p class="eyebrow">Your collection</p>
-    <h1 id="saved-title">Saved places</h1>
+    <p class="eyebrow">{{ languageStore.t('yourCollection') }}</p>
+    <h1 id="saved-title">{{ languageStore.t('savedPlaces') }}</h1>
 
-    <p v-if="loading" class="placeholder-copy" aria-live="polite">Loading saved places...</p>
+    <p v-if="loading" class="placeholder-copy" aria-live="polite">{{ languageStore.t('loadingSaved') }}</p>
 
     <p v-else-if="error" class="placeholder-copy" role="alert">{{ error }}</p>
 
     <p v-else-if="savedPlaces.length === 0" class="placeholder-copy">
-      You have not saved any places yet.
+      {{ languageStore.t('noSaved') }}
     </p>
 
     <PlaceList v-else :places="savedPlaces" />

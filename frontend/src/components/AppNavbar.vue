@@ -2,8 +2,11 @@
 import { computed } from 'vue'
 
 import { useFavoritesStore } from '../stores/favorites'
+import LanguageSwitcher from './LanguageSwitcher.vue'
+import { useLanguageStore } from '../stores/language'
 
 const favoritesStore = useFavoritesStore()
+const languageStore = useLanguageStore()
 const savedCount = computed(() => favoritesStore.favoriteIds.length)
 </script>
 
@@ -17,21 +20,18 @@ const savedCount = computed(() => favoritesStore.favoriteIds.length)
       </span>
     </RouterLink>
 
-    <nav class="nav-links" aria-label="Primary navigation">
+    <nav class="nav-links" :aria-label="languageStore.t('primaryNavigation')">
       <RouterLink class="nav-link" to="/" exact-active-class="router-link-exact-active">
-        Locations
+        {{ languageStore.t('locations') }}
       </RouterLink>
       <RouterLink class="nav-link" to="/map" exact-active-class="router-link-exact-active">
-        Map
+        {{ languageStore.t('map') }}
       </RouterLink>
       <RouterLink class="nav-link" to="/saved" exact-active-class="router-link-exact-active">
-        Saved {{ savedCount }}
+        {{ languageStore.t('saved') }} {{ savedCount }}
       </RouterLink>
     </nav>
 
-    <div class="archive-status">
-      <span>Public<br />archive</span>
-      <button type="button" class="status-button" aria-label="Public archive status">◎</button>
-    </div>
+    <LanguageSwitcher />
   </header>
 </template>

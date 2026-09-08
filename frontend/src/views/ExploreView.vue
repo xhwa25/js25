@@ -6,11 +6,13 @@ import FilterBar from '../components/FilterBar.vue'
 import PlaceList from '../components/PlaceList.vue'
 import SearchBar from '../components/SearchBar.vue'
 import { usePlacesStore } from '../stores/places'
+import { useLanguageStore } from '../stores/language'
 import type { PlaceCategory } from '../types/place'
 
 const placesStore = usePlacesStore()
 const { places, loading, error } = storeToRefs(placesStore)
 const { search, category, continent, year } = storeToRefs(placesStore)
+const languageStore = useLanguageStore()
 
 onMounted(() => {
   void placesStore.fetchPlaces()
@@ -50,18 +52,17 @@ function clearFilters() {
   <section class="explore-view">
     <div class="explore-hero">
       <div>
-        <p class="eyebrow">A living travel archive</p>
-        <h1>Locations</h1>
+        <p class="eyebrow">{{ languageStore.t('archiveEyebrow') }}</p>
+        <h1>{{ languageStore.t('locationsHeading') }}</h1>
         <p class="hero-copy">
-          Follow the places behind the photos. Search the archive or narrow it down by category,
-          region, and year.
+          {{ languageStore.t('locationsIntro') }}
         </p>
       </div>
-      <p class="archive-count">{{ places.length }} places in the archive</p>
+      <p class="archive-count">{{ places.length }} {{ languageStore.t('placesInArchive') }}</p>
     </div>
 
-    <div class="locations-layout">
-      <aside class="locations-sidebar" aria-label="Search and filter places">
+    <div class="places-browser">
+      <section class="places-sticky-controls" :aria-label="languageStore.t('placeFilters')">
         <SearchBar :model-value="search" @update:model-value="updateSearch" />
         <FilterBar
           :category="category"
@@ -72,42 +73,39 @@ function clearFilters() {
           @update:year="updateYear"
           @clear="clearFilters"
         />
-      </aside>
-
-      <div class="locations-results">
-        <div v-if="loading" class="explore-loading" aria-live="polite" aria-label="Loading places">
-          <div class="loading-list">
-            <div v-for="index in 3" :key="index" class="place-card-skeleton" aria-hidden="true">
-              <span class="skeleton-media"></span>
-              <span class="skeleton-copy">
-                <span class="skeleton-line skeleton-line-title"></span>
-                <span class="skeleton-line"></span>
-                <span class="skeleton-line skeleton-line-short"></span>
-              </span>
-            </div>
+        <div class="places-list-toolbar">
+          <div>
+            <h2>{{ languageStore.t('allPlaces') }}</h2>
+            <span>{{ places.length }} {{ languageStore.t('placesCount') }}</span>
           </div>
+          <span>{{ languageStore.t('latestVisits') }}</span>
         </div>
+      </section>
 
-        <div v-else-if="error" class="state-panel" role="alert">
-          <p class="state-label">Could not load places</p>
-          <p>{{ error }}</p>
-          <button type="button" class="state-action" @click="refreshPlaces">Try again</button>
+      <div v-if="loading" class="explore-loading places-grid" aria-live="polite" aria-label="Loading places">
+          <div v-for="index in 6" :key="index" class="place-card-skeleton" aria-hidden="true">
+          <span class="skeleton-media"></span>
+          <span class="skeleton-copy">
+            <span class="skeleton-line skeleton-line-title"></span>
+            <span class="skeleton-line"></span>
+            <span class="skeleton-line skeleton-line-short"></span>
+          </span>
         </div>
-
-        <div v-else-if="places.length === 0" class="state-panel" aria-live="polite">
-          <p class="state-label">No places match these filters</p>
-          <p>Try a different search or clear the filters to see the full collection.</p>
-          <button type="button" class="state-action" @click="clearFilters">Clear filters</button>
-        </div>
-
-        <section v-else class="locations-list-panel" aria-label="All places">
-          <header class="locations-list-header">
-            <h2>All places</h2>
-            <span>Latest visits first</span>
-          </header>
-          <PlaceList :places="places" />
-        </section>
       </div>
+
+      <div v-else-if="error" class="state-panel" role="alert">
+        <p class="state-label">{{ languageStore.t('couldNotLoad') }}</p>
+        <p>{{ error }}</p>
+        <button type="button" class="state-action" @click="refreshPlaces">{{ languageStore.t('tryAgain') }}</button>
+      </div>
+
+      <div v-else-if="places.length === 0" class="state-panel" aria-live="polite">
+        <p class="state-label">{{ languageStore.t('noResults') }}</p>
+        <p>{{ languageStore.t('noResultsHelp') }}</p>
+        <button type="button" class="state-action" @click="clearFilters">{{ languageStore.t('clear') }}</button>
+      </div>
+
+      <PlaceList v-else class="places-grid" :places="places" />
     </div>
   </section>
 </template>

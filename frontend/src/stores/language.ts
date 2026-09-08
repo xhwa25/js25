@@ -1,0 +1,167 @@
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+
+export type Locale = 'en' | 'zh'
+export type TranslationKey = keyof typeof translations.en
+
+const LANGUAGE_STORAGE_KEY = 'star-trails-language'
+
+const translations = {
+  en: {
+    locations: 'Locations',
+    map: 'Map',
+    saved: 'Saved',
+    primaryNavigation: 'Primary navigation',
+    languageSwitcher: 'Language',
+    english: 'EN',
+    chinese: '中文',
+    archiveEyebrow: 'A living travel archive',
+    locationsHeading: 'Locations',
+    locationsIntro: 'Follow the places behind the photos. Search the archive or narrow it down by category, region, and year.',
+    placesInArchive: 'places in the archive',
+    searchPlaceholder: 'Search places, cities, or countries',
+    searchPlaces: 'Search places, cities, or countries',
+    placeFilters: 'Place filters',
+    interactiveGlobe: 'Interactive globe with filtered places',
+    allPlaces: 'All places',
+    placesCount: 'places',
+    latestVisits: 'Latest visits first',
+    category: 'Category',
+    region: 'Region',
+    year: 'Year',
+    clearFilters: 'Clear all filters',
+    loadingPlaces: 'Loading places...',
+    loadingGlobe: 'Loading globe...',
+    couldNotLoad: 'Could not load places',
+    tryAgain: 'Try again',
+    noResults: 'No places match these filters',
+    noResultsHelp: 'Try a different search or clear the filters to see the full collection.',
+    clear: 'Clear filters',
+    noImage: 'No image',
+    visited: 'Visited',
+    worldPlotted: 'The world, plotted',
+    mapIntro: 'Move across the globe to see every place in the archive.',
+    globe: 'Globe',
+    selectedLocation: 'Selected location',
+    noDescription: 'No description available.',
+    viewFullDetails: 'View full details',
+    viewDetails: 'View details',
+    closePlaceDetails: 'Close place details',
+    location: 'Location',
+    backToPlaces: 'Back to places',
+    placeDetails: 'Place details',
+    placeUnavailable: 'Place unavailable',
+    placeNotFound: 'Place not found.',
+    loadingPlace: 'Loading place...',
+    unableLoadPlace: 'Unable to load this place.',
+    address: 'Address',
+    source: 'Source',
+    openSource: 'Open source link',
+    notProvided: 'Not provided',
+    aboutPlace: 'About this place',
+    yourCollection: 'Your collection',
+    savedPlaces: 'Saved places',
+    loadingSaved: 'Loading saved places...',
+    unableLoadSaved: 'Unable to load saved places.',
+    noSaved: 'You have not saved any places yet.',
+    pageNotFound: 'Page not found',
+    pageNotFoundHelp: 'The page you requested does not exist in this application.',
+    savePlace: 'Save place',
+    removeSaved: 'Remove from saved places',
+    showPlace: 'Show',
+    tokenHelp: 'Add VITE_MAPBOX_ACCESS_TOKEN to frontend/.env.local to show the globe.',
+    globeContainerUnavailable: 'The globe container is unavailable.',
+    mapLoadError: 'Unable to load the Mapbox globe.',
+  },
+  zh: {
+    locations: '地点',
+    map: '地图',
+    saved: '已收藏',
+    primaryNavigation: '主导航',
+    languageSwitcher: '语言',
+    english: 'EN',
+    chinese: '中文',
+    archiveEyebrow: '一份持续生长的旅行档案',
+    locationsHeading: '地点',
+    locationsIntro: '探索照片背后的地点。搜索档案，或按类别、地区和年份缩小范围。',
+    placesInArchive: '个档案地点',
+    searchPlaceholder: '搜索地点、城市或国家',
+    searchPlaces: '搜索地点、城市或国家',
+    placeFilters: '地点筛选',
+    interactiveGlobe: '显示筛选地点的互动地球',
+    allPlaces: '所有地点',
+    placesCount: '个地点',
+    latestVisits: '按最近访问排序',
+    category: '类别',
+    region: '地区',
+    year: '年份',
+    clearFilters: '清除所有筛选',
+    loadingPlaces: '正在加载地点...',
+    loadingGlobe: '正在加载地球...',
+    couldNotLoad: '无法加载地点',
+    tryAgain: '重试',
+    noResults: '没有符合筛选条件的地点',
+    noResultsHelp: '请尝试其他搜索条件，或清除筛选查看完整档案。',
+    clear: '清除筛选',
+    noImage: '暂无图片',
+    visited: '访问于',
+    worldPlotted: '探索世界地点',
+    mapIntro: '在地球上移动，查看档案中的所有地点。',
+    globe: '地球',
+    selectedLocation: '已选地点',
+    noDescription: '暂无描述。',
+    viewFullDetails: '查看完整详情',
+    viewDetails: '查看详情',
+    closePlaceDetails: '关闭地点详情',
+    location: '位置',
+    backToPlaces: '返回地点列表',
+    placeDetails: '地点详情',
+    placeUnavailable: '地点不可用',
+    placeNotFound: '找不到该地点。',
+    loadingPlace: '正在加载地点...',
+    unableLoadPlace: '无法加载该地点。',
+    address: '地址',
+    source: '来源',
+    openSource: '打开来源链接',
+    notProvided: '未提供',
+    aboutPlace: '关于此地点',
+    yourCollection: '你的收藏',
+    savedPlaces: '已收藏地点',
+    loadingSaved: '正在加载收藏地点...',
+    unableLoadSaved: '无法加载收藏地点。',
+    noSaved: '你还没有收藏任何地点。',
+    pageNotFound: '页面不存在',
+    pageNotFoundHelp: '你请求的页面不存在。',
+    savePlace: '收藏地点',
+    removeSaved: '取消收藏',
+    showPlace: '查看',
+    tokenHelp: '请在 frontend/.env.local 中添加 VITE_MAPBOX_ACCESS_TOKEN 以显示地球。',
+    globeContainerUnavailable: '地球容器不可用。',
+    mapLoadError: '无法加载 Mapbox 地球。',
+  },
+} as const
+
+function initialLocale(): Locale {
+  if (typeof window === 'undefined') {
+    return 'en'
+  }
+
+  return window.localStorage.getItem(LANGUAGE_STORAGE_KEY) === 'zh' ? 'zh' : 'en'
+}
+
+export const useLanguageStore = defineStore('language', () => {
+  const locale = ref<Locale>(initialLocale())
+
+  function setLocale(nextLocale: Locale) {
+    locale.value = nextLocale
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, nextLocale)
+    }
+  }
+
+  function t(key: TranslationKey): string {
+    return translations[locale.value][key]
+  }
+
+  return { locale, setLocale, t }
+})

@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from 'vue'
 
+import { useLanguageStore } from '../stores/language'
+
 const props = defineProps<{
   modelValue: string
 }>()
+
+const languageStore = useLanguageStore()
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
@@ -39,13 +43,13 @@ onBeforeUnmount(() => {
 
 <template>
   <label class="search-bar">
-    <span class="sr-only">Search places, cities, or countries</span>
-    <span class="search-icon" aria-hidden="true">⌕</span>
+    <span class="sr-only">{{ languageStore.t('searchPlaces') }}</span>
     <input
       :value="inputValue"
       type="search"
-      placeholder="Search places, cities, or countries"
+      :placeholder="languageStore.t('searchPlaceholder')"
       @input="handleInput"
     />
+    <span class="search-icon" aria-hidden="true">⌕</span>
   </label>
 </template>

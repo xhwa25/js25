@@ -4,46 +4,36 @@ import { nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vu
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 import type { Place } from '../types/place'
+import { useLanguageStore } from '../stores/language'
+import { customizeMapPalette, MAPBOX_STYLE, mapboxToken, markerColor } from '../services/mapbox'
 
 const props = defineProps<{
   places: Place[]
+}>()
+
+const emit = defineEmits<{
+  select: [place: Place]
 }>()
 
 const mapContainer = ref<HTMLDivElement | null>(null)
 const mapError = ref<string | null>(null)
 const map = shallowRef<mapboxgl.Map | null>(null)
 const markers = new Map<number, mapboxgl.Marker>()
-const mapboxToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string | undefined
+const languageStore = useLanguageStore()
 
-function escapeHtml(value: string | number | null): string {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
-}
+let resizeObserver: ResizeObserver | null = null
 
-function popupHtml(place: Place): string {
-  return `
-    <div class="place-popup">
-      <strong>${escapeHtml(place.name)}</strong>
-      <span>${escapeHtml(place.category)}</span>
-      <span>${escapeHtml(place.city)}, ${escapeHtml(place.country)}</span>
-      <span>Visited ${escapeHtml(place.visit_year)}</span>
-    </div>
-  `
-}
 
 function createMarker(place: Place): mapboxgl.Marker {
   const markerElement = document.createElement('button')
   markerElement.type = 'button'
   markerElement.className = 'globe-marker'
   markerElement.setAttribute('aria-label', `Show ${place.name}`)
+  markerElement.style.setProperty('--marker-color', markerColor(place.category))
+  markerElement.addEventListener('click', () => emit('select', place))
 
   return new mapboxgl.Marker({ element: markerElement })
     .setLngLat([place.longitude, place.latitude])
-    .setPopup(new mapboxgl.Popup({ offset: 18 }).setHTML(popupHtml(place)))
     .addTo(map.value!)
 }
 
@@ -64,7 +54,6 @@ function syncMarkers() {
     const existingMarker = markers.get(place.id)
     if (existingMarker) {
       existingMarker.setLngLat([place.longitude, place.latitude])
-      existingMarker.setPopup(new mapboxgl.Popup({ offset: 18 }).setHTML(popupHtml(place)))
       return
     }
 
@@ -76,34 +65,40 @@ onMounted(async () => {
   await nextTick()
 
   if (!mapboxToken) {
-    mapError.value = 'Add VITE_MAPBOX_ACCESS_TOKEN to frontend/.env.local to show the globe.'
+    mapError.value = languageStore.t('tokenHelp')
     return
   }
 
   if (!mapContainer.value) {
-    mapError.value = 'The globe container is unavailable.'
+    mapError.value = languageStore.t('globeContainerUnavailable')
     return
   }
 
   mapboxgl.accessToken = mapboxToken
   map.value = new mapboxgl.Map({
     container: mapContainer.value,
-    style: 'mapbox://styles/mapbox/light-v11',
+    style: MAPBOX_STYLE,
     center: [0, 20],
     zoom: 1.35,
     minZoom: 0.8,
-    maxZoom: 8,
+    maxZoom: 14,
     attributionControl: true,
   })
 
   map.value.on('load', () => {
     map.value?.setProjection('globe')
+    if (map.value) {
+      customizeMapPalette(map.value)
+    }
     syncMarkers()
   })
 
   map.value.on('error', () => {
-    mapError.value = 'Unable to load the Mapbox globe.'
+    mapError.value = languageStore.t('mapLoadError')
   })
+
+  resizeObserver = new ResizeObserver(() => map.value?.resize())
+  resizeObserver.observe(mapContainer.value)
 })
 
 watch(
@@ -115,16 +110,18 @@ watch(
 onBeforeUnmount(() => {
   markers.forEach((marker) => marker.remove())
   markers.clear()
+  resizeObserver?.disconnect()
+  resizeObserver = null
   map.value?.remove()
   map.value = null
 })
 </script>
 
 <template>
-  <section class="places-map" aria-label="Interactive globe with filtered places">
+  <section class="places-map" :aria-label="languageStore.t('interactiveGlobe')">
     <div class="places-map-header">
-      <h2>Globe</h2>
-      <span>{{ places.length }} places</span>
+      <h2>{{ languageStore.t('globe') }}</h2>
+      <span>{{ places.length }} {{ languageStore.t('placesCount') }}</span>
     </div>
 
     <div v-if="mapError" class="places-map-message" role="alert">
