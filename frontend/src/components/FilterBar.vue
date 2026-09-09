@@ -5,6 +5,7 @@ import { PLACE_CATEGORIES, type PlaceCategory } from '../types/place'
 
 import FilterDropdown from './FilterDropdown.vue'
 import { useLanguageStore } from '../stores/language'
+import { localizeGeographicName, localizePlaceCategory } from '../utils/placeLocalization'
 
 const emit = defineEmits<{
   'update:categories': [value: PlaceCategory[]]
@@ -27,32 +28,24 @@ const props = defineProps<{
 }>()
 
 const localizedCountryOptions = computed(() =>
-  props.countryOptions.map((value) => ({ label: value, value })),
+  props.countryOptions.map((value) => ({
+    label: localizeGeographicName(value, languageStore.locale),
+    value,
+  })),
 )
 const localizedYearOptions = computed(() =>
   props.yearOptions.map((value) => ({ label: String(value), value: String(value) })),
 )
 const localizedCityOptions = computed(() =>
-  props.cityOptions.map((value) => ({ label: value, value })),
+  props.cityOptions.map((value) => ({
+    label: localizeGeographicName(value, languageStore.locale),
+    value,
+  })),
 )
-
-const categoryLabels: Record<PlaceCategory, string> = {
-  RESTAURANT: 'Restaurant',
-  CAFE: 'Cafe',
-  ATTRACTION: 'Attraction',
-  OTHER: 'Other',
-}
-
-const categoryLabelsChinese: Record<PlaceCategory, string> = {
-  RESTAURANT: '餐厅',
-  CAFE: '咖啡馆',
-  ATTRACTION: '景点',
-  OTHER: '其他',
-}
 
 const localizedCategoryOptions = computed(() => [
   ...PLACE_CATEGORIES.map((value) => ({
-    label: languageStore.locale === 'zh' ? categoryLabelsChinese[value] : categoryLabels[value],
+    label: localizePlaceCategory(value, languageStore.locale),
     value,
   })),
 ])

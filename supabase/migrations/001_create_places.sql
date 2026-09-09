@@ -4,13 +4,12 @@ create table if not exists public.places (
   name text not null,
   description text,
   category text not null check (category in (
+    'ATTRACTION',
     'RESTAURANT',
     'CAFE',
-    'ATTRACTION',
     'SHOPPING',
-    'HOTEL',
-    'EVENT',
-    'OTHER'
+    'PHOTO SPOT',
+    'ENTERTAINMENT'
   )),
   continent text not null,
   country text not null,

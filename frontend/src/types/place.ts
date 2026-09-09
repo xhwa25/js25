@@ -1,8 +1,10 @@
 export const PLACE_CATEGORIES = [
+  'ATTRACTION',
   'RESTAURANT',
   'CAFE',
-  'ATTRACTION',
-  'OTHER',
+  'SHOPPING',
+  'PHOTO SPOT',
+  'ENTERTAINMENT',
 ] as const
 
 export type PlaceCategory = (typeof PLACE_CATEGORIES)[number]

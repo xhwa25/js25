@@ -10,6 +10,7 @@ import type { Place } from '../types/place'
 import { useLanguageStore } from '../stores/language'
 import { customizeMapPalette, MAPBOX_STYLE, mapboxToken, markerColor } from '../services/mapbox'
 import { getPlaceName, getPlaceNameSubtitle } from '../utils/placeName'
+import { localizePlaceCategory } from '../utils/placeLocalization'
 
 const route = useRoute()
 const languageStore = useLanguageStore()
@@ -171,7 +172,7 @@ onBeforeUnmount(resetMap)
 
         <div class="place-detail-content">
           <div class="place-detail-kicker-row">
-            <span class="place-card-category">{{ place.category }}</span>
+            <span class="place-card-category">{{ localizePlaceCategory(place.category, languageStore.locale) }}</span>
             <FavoriteButton :place-id="place.id" />
           </div>
 

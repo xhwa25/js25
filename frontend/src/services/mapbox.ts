@@ -8,13 +8,12 @@ export const markerColors: Record<string, string> = {
   CAFE: '#b39a73',
   ATTRACTION: '#8eaaa0',
   SHOPPING: '#9d9ab0',
-  HOTEL: '#a99a8b',
-  EVENT: '#86a8a6',
-  OTHER: '#9ba5a1',
+  'PHOTO SPOT': '#a99a8b',
+  ENTERTAINMENT: '#86a8a6',
 }
 
 export function markerColor(category: string): string {
-  return markerColors[category] ?? markerColors.OTHER
+  return markerColors[category] ?? '#9ba5a1'
 }
 
 export function customizeMapPalette(mapInstance: mapboxgl.Map) {

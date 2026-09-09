@@ -5,6 +5,7 @@ import FavoriteButton from './FavoriteButton.vue'
 import type { Place } from '../types/place'
 import { useLanguageStore } from '../stores/language'
 import { getPlaceName, getPlaceNameSubtitle } from '../utils/placeName'
+import { localizePlaceCategory } from '../utils/placeLocalization'
 
 const props = defineProps<{
   place: Place
@@ -14,6 +15,9 @@ const imageFailed = ref(false)
 const languageStore = useLanguageStore()
 const displayName = computed(() => getPlaceName(props.place, languageStore.locale))
 const nameSubtitle = computed(() => getPlaceNameSubtitle(props.place, languageStore.locale))
+const displayCategory = computed(() =>
+  localizePlaceCategory(props.place.category, languageStore.locale),
+)
 </script>
 
 <template>
@@ -45,7 +49,7 @@ const nameSubtitle = computed(() => getPlaceNameSubtitle(props.place, languageSt
         </div>
         <p class="place-card-location">{{ place.city }}, {{ place.country }}</p>
         <p class="place-card-year">{{ languageStore.t('visited') }} {{ place.visit_year }}</p>
-        <span class="place-card-category">{{ place.category }}</span>
+        <span class="place-card-category">{{ displayCategory }}</span>
       </div>
     </RouterLink>
 

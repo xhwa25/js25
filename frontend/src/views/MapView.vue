@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import FavoriteButton from '../components/FavoriteButton.vue'
 import PlacesMap from '../components/PlacesMap.vue'
 import { usePlacesStore } from '../stores/places'
+import { localizePlaceCategory } from '../utils/placeLocalization'
 import type { Place } from '../types/place'
 import { useLanguageStore } from '../stores/language'
 import { getPlaceName, getPlaceNameSubtitle } from '../utils/placeName'
@@ -70,7 +71,7 @@ watch(places, (nextPlaces) => {
             </div>
             <FavoriteButton :place-id="selectedPlace.id" />
           </div>
-          <span class="map-place-category">{{ selectedPlace.category }}</span>
+          <span class="map-place-category">{{ localizePlaceCategory(selectedPlace.category, languageStore.locale) }}</span>
           <p class="map-place-location">{{ selectedPlace.city }}, {{ selectedPlace.country }}</p>
           <p v-if="selectedPlace.address" class="map-place-fact">{{ selectedPlace.address }}</p>
           <RouterLink
