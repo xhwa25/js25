@@ -61,11 +61,7 @@ function clearFilters() {
       <div>
         <p class="eyebrow">{{ languageStore.t('archiveEyebrow') }}</p>
         <h1>{{ languageStore.t('locationsHeading') }}</h1>
-        <p class="hero-copy">
-          {{ languageStore.t('locationsIntro') }}
-        </p>
       </div>
-      <p class="archive-count">{{ places.length }} {{ languageStore.t('placesInArchive') }}</p>
     </div>
 
     <div class="places-browser">
@@ -85,14 +81,15 @@ function clearFilters() {
           @update:years="updateYears"
           @clear="clearFilters"
         />
-        <div class="places-list-toolbar">
-          <div>
-            <h2>{{ languageStore.t('allPlaces') }}</h2>
-            <span>{{ places.length }} {{ languageStore.t('placesCount') }}</span>
-          </div>
-          <span>{{ languageStore.t('latestVisits') }}</span>
-        </div>
       </section>
+
+      <div class="places-list-toolbar">
+        <div>
+          <h2>{{ languageStore.t('allPlaces') }}</h2>
+          <span>{{ places.length }} {{ languageStore.t('placesCount') }}</span>
+        </div>
+        <span>{{ languageStore.t('latestVisits') }}</span>
+      </div>
 
       <div v-if="loading" class="explore-loading places-grid" aria-live="polite" aria-label="Loading places">
           <div v-for="index in 6" :key="index" class="place-card-skeleton" aria-hidden="true">

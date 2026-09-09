@@ -72,11 +72,7 @@ watch(places, (nextPlaces) => {
           </div>
           <span class="map-place-category">{{ selectedPlace.category }}</span>
           <p class="map-place-location">{{ selectedPlace.city }}, {{ selectedPlace.country }}</p>
-          <p class="map-place-fact">{{ languageStore.t('visited') }} {{ selectedPlace.visit_year }}</p>
           <p v-if="selectedPlace.address" class="map-place-fact">{{ selectedPlace.address }}</p>
-          <p class="map-place-description">
-            {{ selectedPlace.description || languageStore.t('noDescription') }}
-          </p>
           <RouterLink
             class="map-place-detail-link"
             :to="{ name: 'place-detail', params: { id: selectedPlace.id } }"

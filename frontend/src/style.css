@@ -1587,6 +1587,17 @@ body {
   font-size: 15px;
 }
 
+.map-place-map-link {
+  display: block;
+  color: var(--archive-teal);
+  text-decoration: none;
+}
+
+.map-place-map-link:hover,
+.map-place-map-link:focus-visible {
+  text-decoration: underline;
+}
+
 .map-place-description {
   margin: 22px 0 0;
   color: #4c615d;
@@ -1651,20 +1662,15 @@ body {
   }
 }
 
-/* Locations browser: sticky controls and independent card grid */
+/* Locations browser: independent controls and card grid */
 .places-browser {
   min-width: 0;
 }
 
 .places-sticky-controls {
-  position: sticky;
-  top: 0;
-  z-index: 5;
   display: grid;
   gap: 16px;
   padding: 12px 0 20px;
-  background: var(--archive-bg);
-  box-shadow: 0 10px 18px rgba(27, 61, 55, .06);
 }
 
 .places-sticky-controls .search-bar,
@@ -1685,12 +1691,17 @@ body {
 }
 
 .places-list-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   min-height: 62px;
   padding: 0 4px;
+  background: var(--archive-bg);
+  box-shadow: 0 8px 16px rgba(27, 61, 55, .06);
 }
 
 .places-list-toolbar > div {
@@ -2378,28 +2389,43 @@ body {
 
 /* Compact desktop locations workspace */
 @media (min-width: 768px) {
-  .explore-hero {
-    min-height: 108px;
+  .explore-view,
+  .map-view {
+    margin-top: -24px;
+  }
+
+  .explore-hero,
+  .map-view-heading {
+    align-items: flex-start;
+    min-height: 96px;
     padding: 4px 0 12px;
   }
 
-  .explore-hero h1 {
+  .map-view-heading .archive-count {
+    align-self: flex-end;
+  }
+
+  .explore-hero h1,
+  .map-view-heading h1 {
     margin-top: 7px;
     font-size: 34px;
   }
 
-  .explore-hero .eyebrow {
+  .explore-hero .eyebrow,
+  .map-view-heading .eyebrow {
     font-size: 10px;
   }
 
-  .explore-hero .hero-copy {
+  .explore-hero .hero-copy,
+  .map-view-heading .hero-copy {
     max-width: 760px;
     margin-top: 7px;
     font-size: 13px;
     line-height: 1.4;
   }
 
-  .explore-hero .archive-count {
+  .explore-hero .archive-count,
+  .map-view-heading .archive-count {
     margin-bottom: 4px;
     font-size: 13px;
   }
