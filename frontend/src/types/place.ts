@@ -2,9 +2,6 @@ export const PLACE_CATEGORIES = [
   'RESTAURANT',
   'CAFE',
   'ATTRACTION',
-  'SHOPPING',
-  'HOTEL',
-  'EVENT',
   'OTHER',
 ] as const
 
@@ -12,7 +9,9 @@ export type PlaceCategory = (typeof PLACE_CATEGORIES)[number]
 
 export interface Place {
   id: number
-  name: string
+  name: string | null
+  english_name: string | null
+  korean_name: string | null
   description: string | null
   category: PlaceCategory
   continent: string
@@ -21,6 +20,7 @@ export interface Place {
   address: string | null
   latitude: number
   longitude: number
+  map_url: string | null
   visit_year: number
   image_url: string | null
   source_url?: string | null

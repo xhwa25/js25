@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 interface DropdownOption {
   label: string
   value: string
 }
 
-defineProps<{
+const props = defineProps<{
   label: string
-  modelValue: string
+  modelValue: string[]
   options: DropdownOption[]
 }>()
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string]
+  'update:modelValue': [value: string[]]
 }>()
 
 const root = ref<HTMLElement | null>(null)
@@ -25,9 +25,24 @@ function closeOnOutside(event: MouseEvent) {
   }
 }
 
-function selectOption(value: string) {
-  emit('update:modelValue', value)
-  open.value = false
+const triggerLabel = computed(() => {
+  if (props.modelValue.length === 0) {
+    return props.label
+  }
+
+  if (props.modelValue.length === 1) {
+    return props.options.find((option) => option.value === props.modelValue[0])?.label ?? props.label
+  }
+
+  return `${props.label} (${props.modelValue.length})`
+})
+
+function toggleOption(value: string) {
+  const nextValues = props.modelValue.includes(value)
+    ? props.modelValue.filter((currentValue) => currentValue !== value)
+    : [...props.modelValue, value]
+
+  emit('update:modelValue', nextValues)
 }
 
 function handleKeydown(event: KeyboardEvent) {
@@ -56,23 +71,31 @@ onBeforeUnmount(() => {
       :aria-haspopup="'listbox'"
       @click="open = !open"
     >
-      <span>{{ options.find((option) => option.value === modelValue)?.label ?? label }}</span>
+      <span>{{ triggerLabel }}</span>
       <span class="filter-dropdown-chevron" aria-hidden="true">⌄</span>
     </button>
 
-    <div v-if="open" class="filter-dropdown-menu" role="listbox" :aria-label="label">
+    <div
+      v-if="open"
+      class="filter-dropdown-menu"
+      role="listbox"
+      aria-multiselectable="true"
+      :aria-label="label"
+    >
       <button
         v-for="option in options"
-        :key="option.value || 'all'"
+        :key="option.value"
         type="button"
         class="filter-dropdown-option"
-        :class="{ 'is-selected': option.value === modelValue }"
+        :class="{ 'is-selected': modelValue.includes(option.value) }"
         role="option"
-        :aria-selected="option.value === modelValue"
-        @click="selectOption(option.value)"
+        :aria-selected="modelValue.includes(option.value)"
+        @click="toggleOption(option.value)"
       >
         <span>{{ option.label }}</span>
-        <span v-if="option.value === modelValue" class="filter-dropdown-check" aria-hidden="true">✓</span>
+        <span class="filter-dropdown-checkbox" aria-hidden="true">
+          <span v-if="modelValue.includes(option.value)">✓</span>
+        </span>
       </button>
     </div>
   </div>

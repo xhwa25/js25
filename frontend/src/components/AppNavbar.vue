@@ -12,10 +12,10 @@ const savedCount = computed(() => favoritesStore.favoriteIds.length)
 
 <template>
   <header class="app-navbar">
-    <RouterLink class="brand" to="/" aria-label="Star Trails home">
+    <RouterLink class="brand" to="/" aria-label="JS25 World home">
       <span class="brand-mark" aria-hidden="true">✦</span>
       <span class="brand-copy">
-        <strong>Star<br />Trails</strong>
+        <strong>JS25<br />World</strong>
         <small>PLACE<br />ARCHIVE</small>
       </span>
     </RouterLink>

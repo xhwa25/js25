@@ -1713,7 +1713,7 @@ body {
 }
 
 .places-sticky-controls .filter-bar {
-  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
   gap: 12px;
 }
 
@@ -1867,7 +1867,7 @@ body {
   }
 
   .places-sticky-controls .filter-bar {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .places-sticky-controls .clear-filters {
@@ -2035,9 +2035,23 @@ body {
   outline: 0;
 }
 
-.filter-dropdown-check {
-  font-size: 15px;
+.filter-dropdown-checkbox {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #ffffff;
+  background: #ffffff;
+  border: 1px solid #b8c9c4;
+  border-radius: 5px;
+  font-size: 13px;
   font-weight: 800;
+}
+
+.filter-dropdown-option.is-selected .filter-dropdown-checkbox {
+  background: var(--archive-teal);
+  border-color: var(--archive-teal);
 }
 
 @media (max-width: 640px) {
@@ -2336,5 +2350,100 @@ body {
 
   .place-detail-map {
     min-height: 360px;
+  }
+}
+
+/* Localized place names */
+.place-card-name-group,
+.map-place-title-row > div {
+  min-width: 0;
+}
+
+.place-name-subtitle {
+  margin: 5px 0 0;
+  color: var(--archive-muted);
+  font-size: 12px;
+  font-weight: 450;
+  line-height: 1.35;
+}
+
+.map-place-title-row .place-name-subtitle {
+  font-size: 13px;
+}
+
+.place-detail-heading .place-name-subtitle {
+  margin-top: 7px;
+  font-size: 14px;
+}
+
+/* Compact desktop locations workspace */
+@media (min-width: 768px) {
+  .explore-hero {
+    min-height: 108px;
+    padding: 4px 0 12px;
+  }
+
+  .explore-hero h1 {
+    margin-top: 7px;
+    font-size: 34px;
+  }
+
+  .explore-hero .eyebrow {
+    font-size: 10px;
+  }
+
+  .explore-hero .hero-copy {
+    max-width: 760px;
+    margin-top: 7px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .explore-hero .archive-count {
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+
+  .places-sticky-controls {
+    gap: 6px;
+    padding: 4px 0 8px;
+  }
+
+  .places-sticky-controls .search-bar,
+  .places-sticky-controls .search-bar input {
+    min-height: 44px;
+  }
+
+  .places-sticky-controls .search-bar input {
+    padding-left: 22px;
+    padding-right: 54px;
+    font-size: 15px;
+  }
+
+  .places-sticky-controls .search-icon {
+    right: 19px;
+    font-size: 22px;
+  }
+
+  .places-sticky-controls .filter-bar {
+    gap: 10px;
+  }
+
+  .places-sticky-controls .filter-dropdown-trigger,
+  .places-sticky-controls .clear-filters {
+    min-height: 40px;
+    font-size: 13px;
+  }
+
+  .places-list-toolbar {
+    min-height: 32px;
+  }
+
+  .places-list-toolbar h2 {
+    font-size: 18px;
+  }
+
+  .places-list-toolbar span {
+    font-size: 12px;
   }
 }

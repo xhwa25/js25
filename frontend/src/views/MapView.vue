@@ -7,6 +7,7 @@ import PlacesMap from '../components/PlacesMap.vue'
 import { usePlacesStore } from '../stores/places'
 import type { Place } from '../types/place'
 import { useLanguageStore } from '../stores/language'
+import { getPlaceName, getPlaceNameSubtitle } from '../utils/placeName'
 
 const placesStore = usePlacesStore()
 const { places, loading, error } = storeToRefs(placesStore)
@@ -52,13 +53,21 @@ watch(places, (nextPlaces) => {
           v-if="selectedPlace.image_url"
           class="map-place-image"
           :src="selectedPlace.image_url"
-          :alt="selectedPlace.name"
+          :alt="getPlaceName(selectedPlace, languageStore.locale)"
         />
         <div v-else class="map-place-image map-place-image-placeholder">{{ languageStore.t('noImage') }}</div>
 
         <div class="map-place-content">
           <div class="map-place-title-row">
-            <h2>{{ selectedPlace.name }}</h2>
+            <div>
+              <h2>{{ getPlaceName(selectedPlace, languageStore.locale) }}</h2>
+              <p
+                v-if="getPlaceNameSubtitle(selectedPlace, languageStore.locale)"
+                class="place-name-subtitle"
+              >
+                {{ getPlaceNameSubtitle(selectedPlace, languageStore.locale) }}
+              </p>
+            </div>
             <FavoriteButton :place-id="selectedPlace.id" />
           </div>
           <span class="map-place-category">{{ selectedPlace.category }}</span>

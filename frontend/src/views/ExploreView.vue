@@ -11,11 +11,13 @@ import type { PlaceCategory } from '../types/place'
 
 const placesStore = usePlacesStore()
 const { places, loading, error } = storeToRefs(placesStore)
-const { search, category, continent, year } = storeToRefs(placesStore)
+const { search, categories, countries, cities, years, availableCountries, availableCities, availableYears } =
+  storeToRefs(placesStore)
 const languageStore = useLanguageStore()
 
 onMounted(() => {
   void placesStore.fetchPlaces()
+  void placesStore.fetchFilterOptions()
 })
 
 function refreshPlaces() {
@@ -27,18 +29,23 @@ function updateSearch(value: string) {
   refreshPlaces()
 }
 
-function updateCategory(value: PlaceCategory | '') {
-  placesStore.setCategory(value)
+function updateCategories(value: PlaceCategory[]) {
+  placesStore.setCategories(value)
   refreshPlaces()
 }
 
-function updateContinent(value: string) {
-  placesStore.setContinent(value)
+function updateCountries(value: string[]) {
+  placesStore.setCountries(value)
   refreshPlaces()
 }
 
-function updateYear(value: number | null) {
-  placesStore.setYear(value)
+function updateCities(value: string[]) {
+  placesStore.setCities(value)
+  refreshPlaces()
+}
+
+function updateYears(value: number[]) {
+  placesStore.setYears(value)
   refreshPlaces()
 }
 
@@ -65,12 +72,17 @@ function clearFilters() {
       <section class="places-sticky-controls" :aria-label="languageStore.t('placeFilters')">
         <SearchBar :model-value="search" @update:model-value="updateSearch" />
         <FilterBar
-          :category="category"
-          :continent="continent"
-          :year="year"
-          @update:category="updateCategory"
-          @update:continent="updateContinent"
-          @update:year="updateYear"
+          :categories="categories"
+          :countries="countries"
+          :cities="cities"
+          :years="years"
+          :country-options="availableCountries"
+          :city-options="availableCities"
+          :year-options="availableYears"
+          @update:categories="updateCategories"
+          @update:countries="updateCountries"
+          @update:cities="updateCities"
+          @update:years="updateYears"
           @clear="clearFilters"
         />
         <div class="places-list-toolbar">

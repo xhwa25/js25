@@ -6,6 +6,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import type { Place } from '../types/place'
 import { useLanguageStore } from '../stores/language'
 import { customizeMapPalette, MAPBOX_STYLE, mapboxToken, markerColor } from '../services/mapbox'
+import { getPlaceName } from '../utils/placeName'
 
 const props = defineProps<{
   places: Place[]
@@ -28,7 +29,10 @@ function createMarker(place: Place): mapboxgl.Marker {
   const markerElement = document.createElement('button')
   markerElement.type = 'button'
   markerElement.className = 'globe-marker'
-  markerElement.setAttribute('aria-label', `Show ${place.name}`)
+  markerElement.setAttribute(
+    'aria-label',
+    `${languageStore.t('showPlace')} ${getPlaceName(place, languageStore.locale)}`,
+  )
   markerElement.style.setProperty('--marker-color', markerColor(place.category))
   markerElement.addEventListener('click', () => emit('select', place))
 
@@ -54,6 +58,12 @@ function syncMarkers() {
     const existingMarker = markers.get(place.id)
     if (existingMarker) {
       existingMarker.setLngLat([place.longitude, place.latitude])
+      existingMarker
+        .getElement()
+        .setAttribute(
+          'aria-label',
+          `${languageStore.t('showPlace')} ${getPlaceName(place, languageStore.locale)}`,
+        )
       return
     }
 
@@ -105,6 +115,11 @@ watch(
   () => props.places,
   () => syncMarkers(),
   { deep: true },
+)
+
+watch(
+  () => languageStore.locale,
+  () => syncMarkers(),
 )
 
 onBeforeUnmount(() => {

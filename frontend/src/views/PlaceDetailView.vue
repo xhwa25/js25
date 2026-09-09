@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import mapboxgl from 'mapbox-gl'
-import { nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
@@ -9,6 +9,7 @@ import { getPlaceById } from '../services/places'
 import type { Place } from '../types/place'
 import { useLanguageStore } from '../stores/language'
 import { customizeMapPalette, MAPBOX_STYLE, mapboxToken, markerColor } from '../services/mapbox'
+import { getPlaceName, getPlaceNameSubtitle } from '../utils/placeName'
 
 const route = useRoute()
 const languageStore = useLanguageStore()
@@ -21,6 +22,12 @@ const mapContainer = ref<HTMLDivElement | null>(null)
 const detailMap = shallowRef<mapboxgl.Map | null>(null)
 const detailMarker = shallowRef<mapboxgl.Marker | null>(null)
 let resizeObserver: ResizeObserver | null = null
+const displayName = computed(() =>
+  place.value ? getPlaceName(place.value, languageStore.locale) : '',
+)
+const nameSubtitle = computed(() =>
+  place.value ? getPlaceNameSubtitle(place.value, languageStore.locale) : null,
+)
 
 function resetMap() {
   detailMarker.value?.remove()
@@ -62,7 +69,10 @@ function renderMap(currentPlace: Place) {
     markerElement.type = 'button'
     markerElement.className = 'globe-marker detail-map-marker'
     markerElement.style.setProperty('--marker-color', markerColor(currentPlace.category))
-    markerElement.setAttribute('aria-label', `${languageStore.t('showPlace')} ${currentPlace.name}`)
+    markerElement.setAttribute(
+      'aria-label',
+      `${languageStore.t('showPlace')} ${getPlaceName(currentPlace, languageStore.locale)}`,
+    )
     detailMarker.value = new mapboxgl.Marker({ element: markerElement })
       .setLngLat([currentPlace.longitude, currentPlace.latitude])
       .addTo(detailMap.value)
@@ -121,6 +131,17 @@ watch(
   },
 )
 
+watch(
+  () => languageStore.locale,
+  () => {
+    if (place.value && detailMarker.value) {
+      detailMarker.value
+        .getElement()
+        .setAttribute('aria-label', `${languageStore.t('showPlace')} ${displayName.value}`)
+    }
+  },
+)
+
 onBeforeUnmount(resetMap)
 </script>
 
@@ -141,7 +162,7 @@ onBeforeUnmount(resetMap)
           <img
             v-if="place.image_url && !imageFailed"
             :src="place.image_url"
-            :alt="place.name"
+            :alt="displayName"
             class="place-detail-image"
             @error="imageFailed = true"
           />
@@ -156,7 +177,8 @@ onBeforeUnmount(resetMap)
 
           <div class="place-detail-heading">
             <p class="eyebrow">{{ languageStore.t('placeDetails') }}</p>
-            <h1 id="place-detail-title">{{ place.name }}</h1>
+            <h1 id="place-detail-title">{{ displayName }}</h1>
+            <p v-if="nameSubtitle" class="place-name-subtitle">{{ nameSubtitle }}</p>
             <p class="place-detail-location">{{ place.city }}, {{ place.country }}</p>
           </div>
 
@@ -168,6 +190,14 @@ onBeforeUnmount(resetMap)
             <div>
               <dt>{{ languageStore.t('address') }}</dt>
               <dd>{{ place.address || languageStore.t('notProvided') }}</dd>
+            </div>
+            <div v-if="place.map_url">
+              <dt>{{ languageStore.t('location') }}</dt>
+              <dd>
+                <a :href="place.map_url" target="_blank" rel="noreferrer noopener">
+                  {{ languageStore.t('openGoogleMaps') }}
+                </a>
+              </dd>
             </div>
           </dl>
 

@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import FavoriteButton from './FavoriteButton.vue'
 import type { Place } from '../types/place'
 import { useLanguageStore } from '../stores/language'
+import { getPlaceName, getPlaceNameSubtitle } from '../utils/placeName'
 
-defineProps<{
+const props = defineProps<{
   place: Place
 }>()
 
 const imageFailed = ref(false)
 const languageStore = useLanguageStore()
+const displayName = computed(() => getPlaceName(props.place, languageStore.locale))
+const nameSubtitle = computed(() => getPlaceNameSubtitle(props.place, languageStore.locale))
 </script>
 
 <template>
@@ -18,13 +21,13 @@ const languageStore = useLanguageStore()
     <RouterLink
       class="place-card-link"
       :to="{ name: 'place-detail', params: { id: place.id } }"
-      :aria-label="`${languageStore.t('viewDetails')}: ${place.name}`"
+      :aria-label="`${languageStore.t('viewDetails')}: ${displayName}`"
     >
       <div class="place-card-media">
         <img
           v-if="place.image_url && !imageFailed"
           :src="place.image_url"
-          :alt="place.name"
+          :alt="displayName"
           class="place-card-image"
           @error="imageFailed = true"
         />
@@ -35,7 +38,10 @@ const languageStore = useLanguageStore()
 
       <div class="place-card-content">
         <div class="place-card-heading">
-          <h2 class="place-card-name">{{ place.name }}</h2>
+          <div class="place-card-name-group">
+            <h2 class="place-card-name">{{ displayName }}</h2>
+            <p v-if="nameSubtitle" class="place-name-subtitle">{{ nameSubtitle }}</p>
+          </div>
         </div>
         <p class="place-card-location">{{ place.city }}, {{ place.country }}</p>
         <p class="place-card-year">{{ languageStore.t('visited') }} {{ place.visit_year }}</p>
