@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Super Joyful";
+  src: url("./assets/fonts/super-joyful.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
 :root {
   color: #172a2a;
   background: #f5f8f6;
@@ -882,17 +890,12 @@ body {
   line-height: 1.05;
 }
 
-.brand-mark {
-  display: grid;
-  width: 44px;
-  height: 44px;
-  place-items: center;
-  color: #ffffff;
-  background: var(--archive-teal);
-  border: 10px solid #d9efe8;
-  border-radius: 50%;
-  font-size: 22px;
-  line-height: 1;
+.brand-logo {
+  display: block;
+  width: 54px;
+  height: 56px;
+  flex: 0 0 auto;
+  object-fit: contain;
 }
 
 .brand-copy {
@@ -902,9 +905,11 @@ body {
 }
 
 .brand-copy strong {
-  font-size: 22px;
-  font-weight: 750;
+  font-family: "Super Joyful", sans-serif;
+  font-size: 26px;
+  font-weight: 400;
   letter-spacing: 0;
+  color: #065e70;
 }
 
 .brand-copy small {
@@ -1284,11 +1289,9 @@ body {
     padding: 16px 20px;
   }
 
-  .brand-mark {
-    width: 42px;
-    height: 42px;
-    border-width: 9px;
-    font-size: 19px;
+  .brand-logo {
+    width: 48px;
+    height: 50px;
   }
 
   .brand-copy strong {

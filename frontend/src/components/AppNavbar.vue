@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import brandLogo from '../assets/js25-logo.png'
 import { useFavoritesStore } from '../stores/favorites'
 import LanguageSwitcher from './LanguageSwitcher.vue'
 import { useLanguageStore } from '../stores/language'
@@ -13,10 +14,10 @@ const savedCount = computed(() => favoritesStore.favoriteIds.length)
 <template>
   <header class="app-navbar">
     <RouterLink class="brand" to="/" aria-label="JS25 World home">
-      <span class="brand-mark" aria-hidden="true">✦</span>
+      <img class="brand-logo" :src="brandLogo" alt="" />
       <span class="brand-copy">
         <strong>JS25<br />World</strong>
-        <small>PLACE<br />ARCHIVE</small>
+
       </span>
     </RouterLink>
 

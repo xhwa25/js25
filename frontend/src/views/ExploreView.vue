@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onBeforeUnmount, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import FilterBar from '../components/FilterBar.vue'
@@ -14,10 +14,44 @@ const { places, loading, error } = storeToRefs(placesStore)
 const { search, categories, countries, cities, years, availableCountries, availableCities, availableYears } =
   storeToRefs(placesStore)
 const languageStore = useLanguageStore()
+let mapPreloadIdleId: number | null = null
+let mapPreloadTimerId: number | null = null
+let isExploreMounted = false
+
+function preloadMapRoute() {
+  mapPreloadIdleId = null
+  mapPreloadTimerId = null
+  void import('./MapView.vue')
+}
+
+function scheduleMapPreload() {
+  if (typeof window.requestIdleCallback === 'function') {
+    mapPreloadIdleId = window.requestIdleCallback(preloadMapRoute, { timeout: 3000 })
+    return
+  }
+
+  mapPreloadTimerId = window.setTimeout(preloadMapRoute)
+}
 
 onMounted(() => {
-  void placesStore.fetchPlaces()
-  void placesStore.fetchFilterOptions()
+  isExploreMounted = true
+  const initialRequests = [placesStore.fetchPlaces(), placesStore.fetchFilterOptions()]
+  void Promise.allSettled(initialRequests).then(() => {
+    if (isExploreMounted) {
+      scheduleMapPreload()
+    }
+  })
+})
+
+onBeforeUnmount(() => {
+  isExploreMounted = false
+  if (mapPreloadIdleId !== null) {
+    window.cancelIdleCallback(mapPreloadIdleId)
+  }
+
+  if (mapPreloadTimerId !== null) {
+    window.clearTimeout(mapPreloadTimerId)
+  }
 })
 
 function refreshPlaces() {

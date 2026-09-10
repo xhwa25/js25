@@ -34,14 +34,20 @@ watch(places, (nextPlaces) => {
       <div>
         <p class="eyebrow">{{ languageStore.t('worldPlotted') }}</p>
         <h1 id="map-title">{{ languageStore.t('map') }}</h1>
-        <p class="hero-copy">{{ languageStore.t('mapIntro') }}</p>
       </div>
       <span class="archive-count">{{ places.length }} {{ languageStore.t('placesInArchive') }}</span>
     </header>
 
-    <p v-if="loading" class="state-panel" aria-live="polite">{{ languageStore.t('loadingGlobe') }}</p>
-    <p v-else-if="error" class="state-panel" role="alert">{{ error }}</p>
-    <div v-else class="map-stage" :class="{ 'has-selection': selectedPlace }">
+    <p v-if="error" class="state-panel" role="alert">{{ error }}</p>
+    <div
+      v-else
+      class="map-stage"
+      :class="{ 'has-selection': selectedPlace }"
+      :aria-busy="loading"
+    >
+      <p v-if="loading" class="sr-only" aria-live="polite">
+        {{ languageStore.t('loadingGlobe') }}
+      </p>
       <aside v-if="selectedPlace" class="map-place-panel" aria-label="Selected place">
         <div class="map-place-panel-header">
           <p class="eyebrow">{{ languageStore.t('selectedLocation') }}</p>
