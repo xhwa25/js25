@@ -35,7 +35,6 @@ watch(places, (nextPlaces) => {
         <p class="eyebrow">{{ languageStore.t('worldPlotted') }}</p>
         <h1 id="map-title">{{ languageStore.t('map') }}</h1>
       </div>
-      <span class="archive-count">{{ places.length }} {{ languageStore.t('placesInArchive') }}</span>
     </header>
 
     <p v-if="error" class="state-panel" role="alert">{{ error }}</p>
