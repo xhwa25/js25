@@ -49,10 +49,15 @@ export async function getPlaces(filters: PlaceFilters = {}): Promise<Place[]> {
     )
   }
 
-  const { data, error } = await query.order('visit_year', {
-    ascending: false,
-    nullsFirst: false,
-  })
+  const { data, error } = await query
+    .order('visit_year', {
+      ascending: false,
+      nullsFirst: false,
+    })
+    .order('english_name', {
+      ascending: true,
+      nullsFirst: false,
+    })
 
   if (error) {
     throw error
