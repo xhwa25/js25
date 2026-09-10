@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 import FavoriteButton from '../components/FavoriteButton.vue'
+import VisitorNotes from '../components/VisitorNotes.vue'
 import { getPlaceById } from '../services/places'
 import type { Place } from '../types/place'
 import { useLanguageStore } from '../stores/language'
@@ -206,6 +207,8 @@ onBeforeUnmount(resetMap)
             <h2>{{ languageStore.t('aboutPlace') }}</h2>
             <p>{{ place.description || languageStore.t('noDescription') }}</p>
           </div>
+
+          <VisitorNotes :place-id="place.id" />
         </div>
       </div>
 
