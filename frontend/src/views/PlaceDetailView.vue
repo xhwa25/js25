@@ -159,57 +159,59 @@ onBeforeUnmount(resetMap)
     </div>
 
     <article v-else-if="place" class="place-detail">
-      <div class="place-detail-info">
-        <div class="place-detail-visual">
-          <img
-            v-if="place.image_url && !imageFailed"
-            :src="place.image_url"
-            :alt="displayName"
-            class="place-detail-image"
-            @error="imageFailed = true"
-          />
-          <div v-else class="place-detail-image place-card-placeholder">{{ languageStore.t('noImage') }}</div>
+      <div class="place-detail-left">
+        <div class="place-detail-info">
+          <div class="place-detail-visual">
+            <img
+              v-if="place.image_url && !imageFailed"
+              :src="place.image_url"
+              :alt="displayName"
+              class="place-detail-image"
+              @error="imageFailed = true"
+            />
+            <div v-else class="place-detail-image place-card-placeholder">{{ languageStore.t('noImage') }}</div>
+          </div>
+
+          <div class="place-detail-content">
+            <div class="place-detail-kicker-row">
+              <span class="place-card-category">{{ localizePlaceCategory(place.category, languageStore.locale) }}</span>
+              <FavoriteButton :place-id="place.id" />
+            </div>
+
+            <div class="place-detail-heading">
+              <p class="eyebrow">{{ languageStore.t('placeDetails') }}</p>
+              <h1 id="place-detail-title">{{ displayName }}</h1>
+              <p v-if="nameSubtitle" class="place-name-subtitle">{{ nameSubtitle }}</p>
+              <p class="place-detail-location">{{ place.city }}, {{ place.country }}</p>
+            </div>
+
+            <dl class="place-detail-facts">
+              <div>
+                <dt>{{ languageStore.t('visited') }}</dt>
+                <dd>{{ place.visit_year }}</dd>
+              </div>
+              <div>
+                <dt>{{ languageStore.t('address') }}</dt>
+                <dd>{{ place.address || languageStore.t('notProvided') }}</dd>
+              </div>
+              <div v-if="place.map_url">
+                <dt>{{ languageStore.t('location') }}</dt>
+                <dd>
+                  <a :href="place.map_url" target="_blank" rel="noreferrer noopener">
+                    {{ languageStore.t('openGoogleMaps') }}
+                  </a>
+                </dd>
+              </div>
+            </dl>
+
+            <div class="place-detail-description">
+              <h2>{{ languageStore.t('aboutPlace') }}</h2>
+              <p>{{ place.description || languageStore.t('noDescription') }}</p>
+            </div>
+          </div>
         </div>
 
-        <div class="place-detail-content">
-          <div class="place-detail-kicker-row">
-            <span class="place-card-category">{{ localizePlaceCategory(place.category, languageStore.locale) }}</span>
-            <FavoriteButton :place-id="place.id" />
-          </div>
-
-          <div class="place-detail-heading">
-            <p class="eyebrow">{{ languageStore.t('placeDetails') }}</p>
-            <h1 id="place-detail-title">{{ displayName }}</h1>
-            <p v-if="nameSubtitle" class="place-name-subtitle">{{ nameSubtitle }}</p>
-            <p class="place-detail-location">{{ place.city }}, {{ place.country }}</p>
-          </div>
-
-          <dl class="place-detail-facts">
-            <div>
-              <dt>{{ languageStore.t('visited') }}</dt>
-              <dd>{{ place.visit_year }}</dd>
-            </div>
-            <div>
-              <dt>{{ languageStore.t('address') }}</dt>
-              <dd>{{ place.address || languageStore.t('notProvided') }}</dd>
-            </div>
-            <div v-if="place.map_url">
-              <dt>{{ languageStore.t('location') }}</dt>
-              <dd>
-                <a :href="place.map_url" target="_blank" rel="noreferrer noopener">
-                  {{ languageStore.t('openGoogleMaps') }}
-                </a>
-              </dd>
-            </div>
-          </dl>
-
-          <div class="place-detail-description">
-            <h2>{{ languageStore.t('aboutPlace') }}</h2>
-            <p>{{ place.description || languageStore.t('noDescription') }}</p>
-          </div>
-
-          <VisitorNotes :place-id="place.id" />
-        </div>
+        <VisitorNotes :place-id="place.id" />
       </div>
 
       <div class="place-detail-map-wrap">
