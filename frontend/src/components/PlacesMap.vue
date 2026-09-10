@@ -135,7 +135,6 @@ onBeforeUnmount(() => {
 <template>
   <section class="places-map" :aria-label="languageStore.t('interactiveGlobe')">
     <div class="places-map-header">
-      <h2>{{ languageStore.t('globe') }}</h2>
       <span>{{ places.length }} {{ languageStore.t('placesCount') }}</span>
     </div>
 
