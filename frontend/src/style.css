@@ -6,6 +6,14 @@
   font-weight: 400;
 }
 
+@font-face {
+  font-family: "Satoshi";
+  src: url("./assets/fonts/satoshi-variable.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 300 900;
+}
+
 :root {
   color: #172a2a;
   background: #f5f8f6;
@@ -2681,6 +2689,15 @@ body {
   font-size: 14px;
 }
 
+.explore-hero .eyebrow,
+.map-view-heading .eyebrow {
+  font-family: "Satoshi", sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: none;
+}
+
 /* Compact desktop locations workspace */
 @media (min-width: 768px) {
   .explore-view,
@@ -2691,8 +2708,13 @@ body {
   .explore-hero,
   .map-view-heading {
     align-items: flex-start;
-    min-height: 96px;
     padding: 4px 0 12px;
+  }
+
+  .explore-hero,
+  .map-view-heading {
+    min-height: 64px;
+    padding-bottom: 4px;
   }
 
   .map-view-heading .archive-count {
@@ -2703,11 +2725,6 @@ body {
   .map-view-heading h1 {
     margin-top: 7px;
     font-size: 34px;
-  }
-
-  .explore-hero .eyebrow,
-  .map-view-heading .eyebrow {
-    font-size: 10px;
   }
 
   .explore-hero .hero-copy,

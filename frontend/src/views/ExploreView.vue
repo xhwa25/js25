@@ -94,7 +94,6 @@ function clearFilters() {
     <div class="explore-hero">
       <div>
         <p class="eyebrow">{{ languageStore.t('archiveEyebrow') }}</p>
-        <h1>{{ languageStore.t('locationsHeading') }}</h1>
       </div>
     </div>
 

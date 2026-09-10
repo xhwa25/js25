@@ -32,8 +32,7 @@ watch(places, (nextPlaces) => {
   <section class="map-view" aria-labelledby="map-title">
     <header class="map-view-heading">
       <div>
-        <p class="eyebrow">{{ languageStore.t('worldPlotted') }}</p>
-        <h1 id="map-title">{{ languageStore.t('map') }}</h1>
+        <p id="map-title" class="eyebrow">{{ languageStore.t('worldPlotted') }}</p>
       </div>
     </header>
 
