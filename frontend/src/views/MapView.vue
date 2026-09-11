@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import FavoriteButton from '../components/FavoriteButton.vue'
@@ -8,12 +8,18 @@ import { usePlacesStore } from '../stores/places'
 import { localizePlaceCategory } from '../utils/placeLocalization'
 import type { Place } from '../types/place'
 import { useLanguageStore } from '../stores/language'
+import { getPlaceImageUrl } from '../utils/placeImage'
 import { getPlaceName, getPlaceNameSubtitle } from '../utils/placeName'
 
 const placesStore = usePlacesStore()
 const { places, loading, error } = storeToRefs(placesStore)
 const selectedPlace = ref<Place | null>(null)
 const languageStore = useLanguageStore()
+const selectedPlaceImageUrl = computed(() =>
+  selectedPlace.value?.image_url
+    ? getPlaceImageUrl(selectedPlace.value.image_url, 'card')
+    : null,
+)
 
 onMounted(() => {
   if (!places.value.length && !loading.value) {
@@ -55,10 +61,12 @@ watch(places, (nextPlaces) => {
         </div>
 
         <img
-          v-if="selectedPlace.image_url"
+          v-if="selectedPlaceImageUrl"
           class="map-place-image"
-          :src="selectedPlace.image_url"
+          :src="selectedPlaceImageUrl"
           :alt="getPlaceName(selectedPlace, languageStore.locale)"
+          loading="lazy"
+          decoding="async"
         />
         <div v-else class="map-place-image map-place-image-placeholder">{{ languageStore.t('noImage') }}</div>
 

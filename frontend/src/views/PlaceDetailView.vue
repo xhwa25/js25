@@ -11,6 +11,7 @@ import type { Place } from '../types/place'
 import { useLanguageStore } from '../stores/language'
 import { customizeMapPalette, MAPBOX_STYLE, mapboxToken, markerColor } from '../services/mapbox'
 import { getPlaceName, getPlaceNameSubtitle } from '../utils/placeName'
+import { getPlaceImageUrl } from '../utils/placeImage'
 import { localizePlaceCategory } from '../utils/placeLocalization'
 
 const route = useRoute()
@@ -29,6 +30,9 @@ const displayName = computed(() =>
 )
 const nameSubtitle = computed(() =>
   place.value ? getPlaceNameSubtitle(place.value, languageStore.locale) : null,
+)
+const detailImageUrl = computed(() =>
+  place.value?.image_url ? getPlaceImageUrl(place.value.image_url, 'detail') : null,
 )
 
 function resetMap() {
@@ -163,9 +167,10 @@ onBeforeUnmount(resetMap)
         <div class="place-detail-info">
           <div class="place-detail-visual">
             <img
-              v-if="place.image_url && !imageFailed"
-              :src="place.image_url"
+              v-if="detailImageUrl && !imageFailed"
+              :src="detailImageUrl"
               :alt="displayName"
+              loading="eager"
               class="place-detail-image"
               @error="imageFailed = true"
             />

@@ -4,15 +4,25 @@ import { computed, ref } from 'vue'
 import FavoriteButton from './FavoriteButton.vue'
 import type { Place } from '../types/place'
 import { useLanguageStore } from '../stores/language'
+import { getPlaceImageUrl } from '../utils/placeImage'
 import { getPlaceName, getPlaceNameSubtitle } from '../utils/placeName'
 import { localizePlaceCategory } from '../utils/placeLocalization'
 
-const props = defineProps<{
-  place: Place
-}>()
+const props = withDefaults(
+  defineProps<{
+    place: Place
+    imageLoading?: 'eager' | 'lazy'
+  }>(),
+  {
+    imageLoading: 'lazy',
+  },
+)
 
 const imageFailed = ref(false)
 const languageStore = useLanguageStore()
+const cardImageUrl = computed(() =>
+  props.place.image_url ? getPlaceImageUrl(props.place.image_url, 'card') : null,
+)
 const displayName = computed(() => getPlaceName(props.place, languageStore.locale))
 const nameSubtitle = computed(() => getPlaceNameSubtitle(props.place, languageStore.locale))
 const displayCategory = computed(() =>
@@ -29,9 +39,11 @@ const displayCategory = computed(() =>
     >
       <div class="place-card-media">
         <img
-          v-if="place.image_url && !imageFailed"
-          :src="place.image_url"
+          v-if="cardImageUrl && !imageFailed"
+          :src="cardImageUrl"
           :alt="displayName"
+          :loading="imageLoading"
+          decoding="async"
           class="place-card-image"
           @error="imageFailed = true"
         />
