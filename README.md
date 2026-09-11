@@ -1,10 +1,10 @@
-# Star Trails
+# JS25-World
 
-Star Trails is a responsive travel archive for browsing places through photography, searchable location data, and an interactive world map. The project pairs a Vue 3 and TypeScript frontend with Supabase-backed place data and visitor notes, plus a Mapbox GL JS 3D globe for geographic exploration.
+Js25 World is a responsive travel archive for browsing places through photography, searchable location data, and an interactive world map. The project pairs a Vue 3 and TypeScript frontend with Supabase-backed place data and visitor notes, plus a Mapbox GL JS 3D globe for geographic exploration.
 
 ## Live Demo
 
-[View Star Trails on Azure Static Web Apps](https://agreeable-field-0aa2edc10.3.azurestaticapps.net/)
+[View JS25-World on Azure Static Web Apps](https://agreeable-field-0aa2edc10.3.azurestaticapps.net/)
 
 ## Key Features
 
