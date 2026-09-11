@@ -171,6 +171,8 @@ onBeforeUnmount(resetMap)
               :src="detailImageUrl"
               :alt="displayName"
               loading="eager"
+              fetchpriority="high"
+              decoding="auto"
               class="place-detail-image"
               @error="imageFailed = true"
             />

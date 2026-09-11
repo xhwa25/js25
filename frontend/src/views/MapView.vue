@@ -65,8 +65,8 @@ watch(places, (nextPlaces) => {
           class="map-place-image"
           :src="selectedPlaceImageUrl"
           :alt="getPlaceName(selectedPlace, languageStore.locale)"
-          loading="lazy"
-          decoding="async"
+          loading="eager"
+          decoding="auto"
         />
         <div v-else class="map-place-image map-place-image-placeholder">{{ languageStore.t('noImage') }}</div>
 

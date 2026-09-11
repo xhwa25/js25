@@ -12,9 +12,11 @@ const props = withDefaults(
   defineProps<{
     place: Place
     imageLoading?: 'eager' | 'lazy'
+    imageFetchPriority?: 'high' | 'low' | 'auto'
   }>(),
   {
     imageLoading: 'lazy',
+    imageFetchPriority: 'auto',
   },
 )
 
@@ -43,7 +45,8 @@ const displayCategory = computed(() =>
           :src="cardImageUrl"
           :alt="displayName"
           :loading="imageLoading"
-          decoding="async"
+          :fetchpriority="imageFetchPriority"
+          :decoding="imageLoading === 'eager' ? 'auto' : 'async'"
           class="place-card-image"
           @error="imageFailed = true"
         />
